@@ -61,7 +61,7 @@ export const getNoteByIdHandler = (req, h) => {
   }
   const response = h.response({
     status: 'fail',
-    message: 'note tidak ditemukan',
+    message: 'Catatan tidak ditemukan',
   });
 
   response.code(404);
