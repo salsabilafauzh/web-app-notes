@@ -1,19 +1,33 @@
 import Hapi from '@hapi/hapi';
-import routes from '../src/routes.js';
-const init = async () => {
-  const server = Hapi.server({
-    port: 5000,
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
-    routes: {
-      cors: {
-        origin: ['*'],
-      },
-    },
-  });
-  server.route(routes);
-  await server.start();
+import registerNote from './api/notes/index.js';
+import NotesService from './services/inMemory/NotesService.js';
 
-  console.log(`server running on port ${server.info.uri}..`);
+const init = async () => {
+  try {
+    const notesService = new NotesService();
+
+    const server = Hapi.server({
+      port: 5000,
+      host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+      routes: {
+        cors: {
+          origin: ['*'],
+        },
+      },
+    });
+
+    await server.register({
+      plugin: registerNote,
+      options: {
+        service: notesService,
+      },
+    });
+
+    await server.start();
+    console.log(`server running on port ${server.info.uri}..`);
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 init();
