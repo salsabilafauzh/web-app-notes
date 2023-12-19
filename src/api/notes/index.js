@@ -1,5 +1,5 @@
-import NotesHandler from './handler.js';
-import routes from './routes.js';
+const NotesHandler = require('./handler.js');
+const routes = require('./routes.js');
 
 const registerNote = {
   name: 'notes',
@@ -10,4 +10,4 @@ const registerNote = {
   },
 };
 
-export default registerNote;
+module.exports = registerNote;
