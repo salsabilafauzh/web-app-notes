@@ -1,4 +1,4 @@
-import ClientError from '../../exceptions/ClientError.js';
+const ClientError = require('../../exceptions/ClientError.js');
 
 class NotesHandler {
   constructor(service, validator) {
@@ -12,11 +12,11 @@ class NotesHandler {
     this.deleteNoteByIdHandler = this.deleteNoteByIdHandler.bind(this);
   }
 
-  addNoteHandler(req, h) {
+  async addNoteHandler(req, h) {
     try {
       this._validator.validateNotePayload(req.payload);
 
-      const id = this._service.addNote(req.payload);
+      const id = await this._service.addNote(req.payload);
       const response = h.response({
         status: 'success',
         message: 'Catatan berhasil ditambahkan',
@@ -46,8 +46,8 @@ class NotesHandler {
     }
   }
 
-  getAllNotesHandler() {
-    const notes = this._service.getNotes();
+  async getAllNotesHandler() {
+    const notes = await this._service.getNotes();
     return {
       status: 'success',
       data: {
@@ -56,11 +56,11 @@ class NotesHandler {
     };
   }
 
-  getNoteByIdHandler(req, h) {
+  async getNoteByIdHandler(req, h) {
     try {
       const { id } = req.params;
 
-      const note = this._service.getNoteById(id);
+      const note = await this._service.getNoteById(id);
       return {
         status: 'success',
         data: {
@@ -86,11 +86,11 @@ class NotesHandler {
     }
   }
 
-  editNoteByIdHandler(req, h) {
+  async editNoteByIdHandler(req, h) {
     try {
       const { id } = req.params;
       this._validator.validateNotePayload(req.payload);
-      this._service.editNoteById(id, req.payload);
+      await this._service.editNoteById(id, req.payload);
 
       return {
         status: 'success',
@@ -115,10 +115,10 @@ class NotesHandler {
     }
   }
 
-  deleteNoteByIdHandler(req, h) {
+  async deleteNoteByIdHandler(req, h) {
     try {
       const { id } = req.params;
-      this._service.deleteNoteById(id);
+      await this._service.deleteNoteById(id);
       return {
         status: 'success',
         message: 'Catatan berhasil dihapus',
@@ -143,4 +143,4 @@ class NotesHandler {
   }
 }
 
-export default NotesHandler;
+module.exports = NotesHandler;
