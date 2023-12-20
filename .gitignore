@@ -1,4 +1,4 @@
 node_modules
 key.pem
 .env
-.prod.env
+.env.production
