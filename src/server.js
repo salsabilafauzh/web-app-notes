@@ -2,12 +2,15 @@ const Hapi = require('@hapi/hapi');
 const registerNote = require('./api/notes/index.js');
 const registerUser = require('./api/users/index.js');
 const registerAuth = require('./api/authentications/index.js');
+const registerCollaborations = require('./api/collaborations/index.js');
 const NotesService = require('./services/postgres/NotesService.js');
 const UsersService = require('./services/postgres/UsersService.js');
 const AuthService = require('./services/postgres/AuthService.js');
+const CollaborationsService = require('./services/postgres/CollaborationsService.js');
 const NoteValidator = require('./validator/notes/index.js');
 const UserValidator = require('./validator/users/index.js');
 const AuthValidator = require('./validator/authentication/index.js');
+const CollaborationValidator = require('./validator/collaborations/index.js');
 const TokenManager = require('./tokenize/TokenManager.js');
 const ClientError = require('./exceptions/ClientError.js');
 const Jwt = require('@hapi/jwt');
@@ -17,7 +20,8 @@ dotenv.config();
 
 const init = async () => {
   try {
-    const notesService = new NotesService();
+    const collaborationsService = new CollaborationsService();
+    const notesService = new NotesService(collaborationsService);
     const usersService = new UsersService();
     const authsService = new AuthService();
 
@@ -75,6 +79,14 @@ const init = async () => {
           usersService: usersService,
           tokenManager: TokenManager,
           validator: AuthValidator,
+        },
+      },
+      {
+        plugin: registerCollaborations,
+        options: {
+          notesService: notesService,
+          collaborationsService: collaborationsService,
+          validator: CollaborationValidator,
         },
       },
     ]);
