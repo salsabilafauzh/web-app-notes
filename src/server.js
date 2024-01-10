@@ -13,6 +13,12 @@ const AuthValidator = require('./validator/authentication/index.js');
 const CollaborationValidator = require('./validator/collaborations/index.js');
 const TokenManager = require('./tokenize/TokenManager.js');
 const ClientError = require('./exceptions/ClientError.js');
+
+//RABBITMQ
+const registerExports = require('./api/exports');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportsValidator = require('./validator/exports');
+
 const Jwt = require('@hapi/jwt');
 const dotenv = require('dotenv');
 
@@ -87,6 +93,13 @@ const init = async () => {
           notesService: notesService,
           collaborationsService: collaborationsService,
           validator: CollaborationValidator,
+        },
+      },
+      {
+        plugin: registerExports,
+        options: {
+          service: ProducerService,
+          validator: ExportsValidator,
         },
       },
     ]);
