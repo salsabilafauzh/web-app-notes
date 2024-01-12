@@ -1,16 +1,21 @@
 const Hapi = require('@hapi/hapi');
+const path = require('path');
+const Inert = require('@hapi/inert');
 const registerNote = require('./api/notes/index.js');
 const registerUser = require('./api/users/index.js');
 const registerAuth = require('./api/authentications/index.js');
 const registerCollaborations = require('./api/collaborations/index.js');
+const registerUploads = require('./api/uploads');
 const NotesService = require('./services/postgres/NotesService.js');
 const UsersService = require('./services/postgres/UsersService.js');
 const AuthService = require('./services/postgres/AuthService.js');
 const CollaborationsService = require('./services/postgres/CollaborationsService.js');
+const UploadService = require('./services/storage/StorageService.js');
 const NoteValidator = require('./validator/notes/index.js');
 const UserValidator = require('./validator/users/index.js');
 const AuthValidator = require('./validator/authentication/index.js');
 const CollaborationValidator = require('./validator/collaborations/index.js');
+const UploadValidator = require('./validator/uploads');
 const TokenManager = require('./tokenize/TokenManager.js');
 const ClientError = require('./exceptions/ClientError.js');
 
@@ -30,6 +35,7 @@ const init = async () => {
     const notesService = new NotesService(collaborationsService);
     const usersService = new UsersService();
     const authsService = new AuthService();
+    const uploadService = new UploadService(path.resolve(__dirname, 'api/uploads/file/images'));
 
     const server = Hapi.server({
       port: process.env.PORT,
@@ -44,6 +50,9 @@ const init = async () => {
     await server.register([
       {
         plugin: Jwt,
+      },
+      {
+        plugin: Inert,
       },
     ]);
 
@@ -100,6 +109,13 @@ const init = async () => {
         options: {
           service: ProducerService,
           validator: ExportsValidator,
+        },
+      },
+      {
+        plugin: registerUploads,
+        options: {
+          service: uploadService,
+          validator: UploadValidator,
         },
       },
     ]);
