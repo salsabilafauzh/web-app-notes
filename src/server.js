@@ -24,6 +24,9 @@ const registerExports = require('./api/exports');
 const ProducerService = require('./services/rabbitmq/ProducerService');
 const ExportsValidator = require('./validator/exports');
 
+// cache
+const CacheService = require('./services/redis/CacheService.js');
+
 const Jwt = require('@hapi/jwt');
 const dotenv = require('dotenv');
 
@@ -31,8 +34,9 @@ dotenv.config();
 
 const init = async () => {
   try {
-    const collaborationsService = new CollaborationsService();
-    const notesService = new NotesService(collaborationsService);
+    const cacheService = new CacheService();
+    const collaborationsService = new CollaborationsService(cacheService);
+    const notesService = new NotesService(collaborationsService, cacheService);
     const usersService = new UsersService();
     const authsService = new AuthService();
     const uploadService = new UploadService(path.resolve(__dirname, 'api/uploads/file/images'));

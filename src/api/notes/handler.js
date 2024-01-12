@@ -104,7 +104,7 @@ class NotesHandler {
       this._validator.validateNotePayload(req.payload);
       const { id: credentialId } = req.auth.credentials;
       await this._service.verifyNoteAccess(id, credentialId);
-      await this._service.editNoteById(id, req.payload);
+      await this._service.editNoteById(id, req.payload, credentialId);
 
       return {
         status: 'success',
@@ -134,7 +134,7 @@ class NotesHandler {
       const { id } = req.params;
       const { id: credentialId } = req.auth.credentials;
       await this._service.verifyNoteOwner(id, credentialId);
-      await this._service.deleteNoteById(id);
+      await this._service.deleteNoteById(id, credentialId);
       return {
         status: 'success',
         message: 'Catatan berhasil dihapus',
