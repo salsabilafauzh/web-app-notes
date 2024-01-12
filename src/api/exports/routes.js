@@ -1,4 +1,4 @@
-const exportNoteRoutes = (handler) => [
+const routes = (handler) => [
   {
     method: 'POST',
     path: '/export/notes',
@@ -9,4 +9,4 @@ const exportNoteRoutes = (handler) => [
   },
 ];
 
-module.exports = exportNoteRoutes;
+module.exports = routes;
