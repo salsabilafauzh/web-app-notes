@@ -6,7 +6,7 @@ class CacheService {
       //   socket: {
       //     host: process.env.REDIS_SERVER,
       //   },
-      host: process.env.REDIS_SERVER,
+      url: process.env.REDIS_SERVER,
     });
     this._client.on('error', (error) => {
       console.error(error);
