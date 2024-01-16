@@ -4,7 +4,7 @@ const ProducerService = {
     const connection = await ampq.connect(process.env.RABBITMQ_SERVER);
     const channel = await connection.createChannel();
     channel.assertQueue(queue, {
-      durableL: true,
+      durable: true,
     });
 
     await channel.sendToQueue(queue, Buffer.from(message));
