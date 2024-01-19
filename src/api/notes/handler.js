@@ -61,6 +61,7 @@ class NotesHandler {
     const notes = await this._service.getNotes(credentialId);
     return {
       status: 'success',
+      message: 'data berhasil ditemukan',
       data: {
         notes,
       },
@@ -75,6 +76,7 @@ class NotesHandler {
       const note = await this._service.getNoteById(id);
       return {
         status: 'success',
+        message: 'data berhasil ditemukan',
         data: {
           note,
         },

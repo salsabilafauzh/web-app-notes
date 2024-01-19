@@ -30,6 +30,7 @@ class UsersHandler {
       const users = await this._service.getUsersByUsername(username);
       return {
         status: 'success',
+        message: 'data berhasil ditemukan',
         data: {
           users,
         },
@@ -62,6 +63,7 @@ class UsersHandler {
 
     const response = h.response({
       status: 'success',
+      message: 'data berhasil ditemukan',
       data: {
         user,
       },
