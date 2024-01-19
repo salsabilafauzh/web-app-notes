@@ -3,13 +3,17 @@ const redis = require('redis');
 class CacheService {
   constructor() {
     this._client = redis.createClient({
-      //   socket: {
-      //     host: process.env.REDIS_SERVER,
-      //   },
-      url: process.env.REDIS_SERVER,
+      rootNodes: [
+        {
+          url: process.env.REDIS_SERVER,
+        },
+      ],
     });
     this._client.on('error', (error) => {
       console.error(error);
+    });
+    this._client.on('connect', () => {
+      console.info('Connected to ElastiCache Redis');
     });
     this._client.connect();
   }
